@@ -18,9 +18,12 @@ $this->title = 'Signup';
 				  <?= $form->field($model, 'firstname') ?>
                 <?= $form->field($model, 'username') ?>				
                 <?= $form->field($model, 'password')->passwordInput() ?>
-				<?= $form->field($model, 'roles')->hiddenInput(
-				['value' => '20']
-    ) ?>
+				<?= $form->field($model, 'roles')->dropDownList([ 'prompt' => 'Select Roles',
+				'10' => 'Admin' ,
+				'20' => 'Employee' ,
+				'30' => 'SM Client' ]) ?> 
+	
+				
                
                     <?= Html::submitButton('Create', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
               
