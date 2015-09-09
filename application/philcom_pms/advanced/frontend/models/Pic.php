@@ -28,8 +28,11 @@ class Pic extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-             [['pic_fullName', 'pic_email', 'pic_contact'], 'required'],
-		     [['pic_fullName', 'pic_email', 'pic_contact'], 'string', 'max' => 45]
+			//['pic_fullName', 'unique', 'targetClass' => '\frontend\models\Pic', 'message' => 'This Project in Charge has already existing.'],
+             [['pic_fullName', 'pic_email', 'pic_contact'], 'safe'],
+		     [['pic_fullName', 'pic_email', 'pic_contact'], 'string', 'max' => 45],
+			 //['pic_email','email']
+			 
         ];
     }
 
