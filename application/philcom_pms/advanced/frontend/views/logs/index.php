@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use frontend\models\Project;
+use dosamigos\datepicker\DatePicker;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\LogsSearch */
@@ -33,7 +34,20 @@ $this->params['breadcrumbs'][] = $this->title;
         ],	
             'logs_employee_name',
             'milestone',
-            'milestone_date',
+          //  'milestone_date',
+			
+			[
+                
+                'attribute' => 'milestone_date',
+				'filter' => DatePicker::widget([
+                    'model' => $searchModel,
+                    'attribute' => 'milestone_date', 
+                    'clientOptions' => [
+                        'autoclose' => true,
+                        'format' => 'yyyy-mm-dd'
+                    ]
+                ]),
+           ],
      
 
            // ['class' => 'yii\grid\ActionColumn'],
