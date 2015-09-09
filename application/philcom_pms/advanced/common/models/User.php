@@ -50,6 +50,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
+			//['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This username has already been taken.'],
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
         ];

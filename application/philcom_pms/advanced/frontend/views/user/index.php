@@ -21,12 +21,12 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
        
-		<?= Html::button('Add Employee', ['value'=>Url::to('index.php?r=site%2Fsignup'),'class' => 'btn btn-success','id'=>'modalButton']) ?>
+		<?= Html::button('Add User', ['value'=>Url::to('index.php?r=site%2Fsignup'),'class' => 'btn btn-success','id'=>'modalButton']) ?>
     </p>
 
 	<?php
         Modal::begin([
-                'header'=>'<h3>Add Employee</h3>',
+                'header'=>'<h3>Add User</h3>',
                 'id'=>'modal',
                 'size'=>'modal-sm',
             ]);

@@ -36,9 +36,6 @@ AppAsset::register($this);
             ]);
            
             if (Yii::$app->user->isGuest) {
-                
-				
-				
                 $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
             } else {
 				$roles = Yii::$app->user->identity->roles;

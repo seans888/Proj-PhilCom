@@ -862,7 +862,7 @@ class ExportMenu extends GridView
     {
         $isFa = $this->fontAwesome;
         $this->_defaultExportConfig = [
-            self::FORMAT_HTML => [
+            /*self::FORMAT_HTML => [
                 'label' => Yii::t('kvexport', 'HTML'),
                 'icon' => $isFa ? 'file-text' : 'floppy-saved',
                 'iconOptions' => ['class' => 'text-info'],
@@ -894,7 +894,7 @@ class ExportMenu extends GridView
                 'mime' => 'text/plain',
                 'extension' => 'txt',
                 'writer' => 'CSV'
-            ],
+            ], */
             self::FORMAT_PDF => [
                 'label' => Yii::t('kvexport', 'PDF'),
                 'icon' => $isFa ? 'file-pdf-o' : 'floppy-disk',
