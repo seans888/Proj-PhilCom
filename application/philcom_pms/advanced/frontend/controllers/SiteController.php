@@ -17,6 +17,7 @@ use frontend\models\Project;
 use frontend\models\ProjectSearch;
 use frontend\models\PicSearch;
 use frontend\models\Pic;
+use yii\helpers\Json;
 
 /**
  * Site controller
@@ -153,17 +154,48 @@ class SiteController extends Controller
     public function actionSignup()
     {
         $model = new SignupForm();
-        if ($model->load(Yii::$app->request->post())) {
-            if ($user = $model->signup()) {
-            
-                    return $this->redirect(['/user/index']);
-                
-            }
-        }
+        
+		if ($model->load(Yii::$app->request->post())) {
+			
+			$a =$model->username;
+			
+			$connection = \Yii::$app->db;
+				$sql = $connection->createCommand('SELECT  username  FROM User WHERE username = "'.$a.'"')->queryAll();
+				$count = $connection->createCommand('SELECT  count(roles) as count  FROM User WHERE roles = 10')->queryAll();
+					$total_encode = json_encode($count);
+					$total_decode = json_decode($total_encode);
+				
+				
+				if ($sql != null){
 
-        return $this->renderAjax('signup', [
-            'model' => $model,
-        ]);
+					echo ("<SCRIPT LANGUAGE='JavaScript'>
+						window.alert('Username has already existing')
+						window.location.href='index.php?r=user%2Findex';
+						</SCRIPT>");
+				}else{
+					
+					if($model->roles == 10){
+						if($total_decode[0]->count >=5 ){
+						echo ("<SCRIPT LANGUAGE='JavaScript'>
+						window.alert('Only 5 Admin can be Created.')
+						window.location.href='index.php?r=user%2Findex';
+						</SCRIPT>");
+						}else{
+							$user = $model->signup();
+					return $this->redirect(['/user/index']);
+						}
+					}else{
+					$user = $model->signup();
+					return $this->redirect(['/user/index']);
+					} 	
+				}
+        }else{
+			
+			return $this->renderAjax('signup', [
+				'model' => $model,
+			]);
+		}
+		//echo "<a href='index.php?r=user%2Findex'> Go Back</a>";
     }
 
     public function actionRequestPasswordReset()
