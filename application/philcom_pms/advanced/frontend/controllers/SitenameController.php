@@ -20,6 +20,17 @@ class SitenameController extends Controller
     public function behaviors()
     {
         return [
+			'access'=>[
+				'class'=>AccessControl::classname(),
+				'only'=>['create','update','index'],
+				'rules'=>[
+					[
+						'allow'=>true,
+						'roles'=>['@']
+					],
+				]
+			],
+		
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -65,13 +76,34 @@ class SitenameController extends Controller
     {
         $model = new Sitename();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['project/index']);
+       
+			
+			 if ($model->load(Yii::$app->request->post()) ) {
+				 
+			$a =$model->sitecode;
+			$b =$model->sitename;
+	   
+			$connection = \Yii::$app->db;
+				$sql = $connection->createCommand('SELECT  sitecode  FROM Sitename WHERE sitecode = "'.$a.'"')->queryAll();
+				$sql2 = $connection->createCommand('SELECT  sitename  FROM Sitename WHERE sitename = "'.$b.'"')->queryAll();
+				
+				if ($sql != null || $sql2 != null){
+					echo ("<SCRIPT LANGUAGE='JavaScript'>
+						window.alert('Sitecode or Sitename has already existing')
+						window.location.href='index.php?r=project%2Findex';
+						</SCRIPT>");
+				}else{
+					
+					$model->save();
+					return $this->redirect(['project/index']);
+				}
+				
         } else {
             return $this->renderAjax('create', [
                 'model' => $model,
             ]);
         }
+		//echo "<a href='index.php?r=project%2Findex'> Go Back</a>";
     }
 
     /**
