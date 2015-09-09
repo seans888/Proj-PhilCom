@@ -19,6 +19,17 @@ class AccountController extends Controller
     public function behaviors()
     {
         return [
+			'access'=>[
+				'class'=>AccessControl::classname(),
+				'only'=>['create','update','index'],
+				'rules'=>[
+					[
+						'allow'=>true,
+						'roles'=>['@']
+					],
+				]
+			],
+		
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -64,13 +75,34 @@ class AccountController extends Controller
     {
         $model = new Account();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['project/index']);
+		
+		
+		
+        if ($model->load(Yii::$app->request->post()) ) {
+			
+			$a =$model->acct_name;
+			
+			$connection = \Yii::$app->db;
+				$sql = $connection->createCommand('SELECT  acct_name  FROM Account WHERE acct_name = "'.$a.'"')->queryAll();
+				
+				if ($sql != null){
+					echo ("<SCRIPT LANGUAGE='JavaScript'>
+						window.alert('This Account has already existing')
+						window.location.href='index.php?r=project%2Findex';
+						</SCRIPT>");
+				}else{
+					$model->save();
+					return $this->redirect(['project/index']);
+				}
+        
         } else {
-            return $this->renderAjax('create', [
-                'model' => $model,
+           return $this->renderAjax('create', [
+               'model' => $model,
             ]);
         }
+		
+		
+		//echo "<a href='index.php?r=project%2Findex'> Go Back</a>";
     }
 
     /**
