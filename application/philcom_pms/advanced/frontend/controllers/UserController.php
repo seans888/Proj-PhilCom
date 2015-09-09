@@ -18,9 +18,20 @@ class UserController extends Controller
 {
 
 public $password_hash;
-    public function behaviors()
+     public function behaviors()
     {
         return [
+			'access'=>[
+				'class'=>AccessControl::classname(),
+				'only'=>['create','update','index'],
+				'rules'=>[
+					[
+						'allow'=>true,
+						'roles'=>['@']
+					],
+				]
+			],
+		
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
