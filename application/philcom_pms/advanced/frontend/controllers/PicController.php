@@ -8,6 +8,7 @@ use frontend\models\PicSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\Json;
 use yii\filters\AccessControl;
 
 /**
@@ -19,6 +20,17 @@ class PicController extends Controller
         public function behaviors()
     {
         return [
+			'access'=>[
+				'class'=>AccessControl::classname(),
+				'only'=>['create','update','index'],
+				'rules'=>[
+					[
+						'allow'=>true,
+						'roles'=>['@']
+					],
+				]
+			],
+		
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -37,11 +49,37 @@ class PicController extends Controller
         $searchModel = new PicSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+		
+    if (Yii::$app->request->post('hasEditable')) {
+
+        $picId = Yii::$app->request->post('editableKey');
+        $model = Pic::findOne($picId);
+
+        $post = [];
+        $posted = current($_POST['Pic']);
+        $post['Pic'] = $posted;
+		
+	
+        if ($model->load($post)) {
+           	
+			
+            $output = '';
+			$model->save();
+			
+            $out = Json::encode(['output'=>$output, 'message'=>'']);
+			
+        } 
+		echo $out;
+        return $this->refresh();
+    }
+		
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
-    }
+		
+		
+	}
 
     /**
      * Displays a single Pic model.
@@ -63,14 +101,29 @@ class PicController extends Controller
     public function actionCreate()
     {
         $model = new Pic();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['project/index']);
+		if ($model->load(Yii::$app->request->post()) ) {
+				 
+			$a =$model->pic_fullName;
+	   
+			$connection = \Yii::$app->db;
+				$sql = $connection->createCommand('SELECT  pic_fullName  FROM Pic WHERE pic_fullName = "'.$a.'"')->queryAll();
+				
+				if ($sql != null){
+					echo ("<SCRIPT LANGUAGE='JavaScript'>
+						window.alert('This Person has already existing in the database')
+						window.location.href='index.php?r=project%2Findex';
+						</SCRIPT>");
+				}else{
+					
+					$model->save();
+					return $this->redirect(['project/index']);
+				}
         } else {
             return $this->renderAjax('create', [
                 'model' => $model,
             ]);
         }
+		//echo "<a href='index.php?r=project%2Findex'> Go Back</a>";
     }
 
     /**
