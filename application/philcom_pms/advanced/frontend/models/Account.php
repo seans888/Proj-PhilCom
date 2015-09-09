@@ -28,6 +28,7 @@ class Account extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+		//['acct_name', 'unique', 'targetClass' => '\frontend\models\Account', 'message' => 'This Account has already been taken.'],
             [['acct_name'], 'string', 'max' => 45]
         ];
     }

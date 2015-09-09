@@ -55,11 +55,11 @@ class LogsSearch extends Logs
             return $dataProvider;
         }
 
-       /* $query->andFilterWhere([
-            'id' => $this->id,
+        $query->andFilterWhere([
+            //'id' => $this->id,
             'milestone_date' => $this->milestone_date,
-            'project_id' => $this->project_id,
-        ]);*/
+            //'project_id' => $this->project_id,
+        ]);
 		
 		$query->joinWith('project');
 

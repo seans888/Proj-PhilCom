@@ -29,6 +29,7 @@ class Sitename extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+			//['sitecode', 'unique', 'targetClass' => '\frontend\models\Sitename', 'message' => 'This Site Code has already existing.'],
             [['sitecode', 'sitename'], 'required'],
             [['sitecode', 'sitename'], 'string', 'max' => 45]
         ];
