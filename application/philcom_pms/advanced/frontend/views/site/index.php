@@ -38,7 +38,7 @@ if($roles == 10 || $roles == 20){
 <center>
 
 <h1> Status Overview</h1>
-<h4> 2015 </h4>
+<!-- <h4> 2015 </h4> -->
 <?php 
 
 $connection = \Yii::$app->db;
@@ -118,7 +118,16 @@ $connection = \Yii::$app->db;
             //'projectcode',
 			//'account',
             //'sitename_id',
-		    'projectname',
+		    //'projectname',
+			 [
+		   'contentOptions'=>['style'=>'font-size:13px; text-align:center;'],
+                'attribute' => 'projectname',
+                'value' => 'projectname',
+				//'filterType'=>GridView::INPUT_TEXT,
+				'filterInputOptions'=>['style'=>'width:140px;'],
+            ],	
+			
+			
 			['class' => 'kartik\grid\ExpandRowColumn',
                 'value' => function ($model, $key, $index, $column) {
                     return GridView::ROW_COLLAPSED;
@@ -136,6 +145,7 @@ $connection = \Yii::$app->db;
             ], 
             //'pic_id',
 			[
+			 'contentOptions'=>['style'=>'font-size:13px; text-align:center;'],
                 'attribute' => 'pic_id',
                 'value' => 'pic.pic_fullName',	
 				'filterType'=>GridView::FILTER_SELECT2,
@@ -148,6 +158,7 @@ $connection = \Yii::$app->db;
 				],	
 			//'status',
 			[
+			 'contentOptions'=>['style'=>'font-size:13px; text-align:center;'],
 				'attribute' => 'status',
                 'value' => 'status',
 				'filterType'=>GridView::FILTER_SELECT2,
@@ -172,9 +183,17 @@ $connection = \Yii::$app->db;
 					'filterInputOptions'=>['placeholder'=>'Choose Status','style'=>'width:180px;'],
 			
 			],			
-            'contractor',
+            //'contractor',
+			 [
+		   'contentOptions'=>['style'=>'font-size:13px; text-align:center;'],
+                'attribute' => 'contractor',
+                'value' => 'contractor',
+				//'filterType'=>GridView::INPUT_TEXT,
+				'filterInputOptions'=>['style'=>'width:140px;'],
+            ],	
 			
 			[
+			 'contentOptions'=>['style'=>'font-size:13px; text-align:center;'],
 			'attribute'=> 'date_of_flob',
 			'filter' => DatePicker::widget([
                     'model' => $searchModel,
@@ -187,7 +206,7 @@ $connection = \Yii::$app->db;
 			],
           //  'date_of_flob',
 		  [
-
+			'contentOptions'=>['style'=>'font-size:13px; text-align:center;'],
 		  'attribute'=>'date_of_completion',
 		  'filter' => DatePicker::widget([
                     'model' => $searchModel,
@@ -199,8 +218,27 @@ $connection = \Yii::$app->db;
                 ]),
 			],
 		  
-			'percentage_of_completion',
-            'remarks',
+			//'percentage_of_completion',
+			[
+		   'contentOptions'=>['style'=>'font-size:13px; text-align:center;'],
+				'label' => '% of Completion' ,
+                'attribute' => 'percentage_of_completion',
+                'value' => 'percentage_of_completion',
+				//'filterType'=>GridView::INPUT_TEXT,
+				'filterInputOptions'=>['style'=>'width:100px;'],
+            ],	
+			
+			
+            //'remarks',
+			[
+		   'contentOptions'=>['style'=>'font-size:13px; text-align:center;'],
+                'attribute' => 'remarks',
+                'value' => 'remarks',
+				//'filterType'=>GridView::INPUT_TEXT,
+				'filterInputOptions'=>['style'=>'width:150px;'],
+            ],	
+			
+			
 			 [	
                 'contentOptions'=>['style'=>'font-size:12px; text-align:center;'],
                 'attribute' => 'logs0.milestone',

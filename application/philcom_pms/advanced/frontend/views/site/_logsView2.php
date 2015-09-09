@@ -5,6 +5,7 @@ use kartik\grid\GridView;
 use yii\widgets\Pjax;
 use yii\helpers\Url;
 use frontend\models\Project;
+use dosamigos\datepicker\DatePicker;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\LogsSearch */
@@ -26,7 +27,19 @@ use frontend\models\Project;
        // ],	
             'logs_employee_name',
             'milestone',
-            'milestone_date',
+           // 'milestone_date',
+			//['contentOptions'=>['style'=>'font-size:13px; text-align:center;'],
+			[
+                'attribute' => 'milestone_date',
+				'filter' => DatePicker::widget([
+                    'model' => $searchModel,
+                    'attribute' => 'milestone_date', 
+                    'clientOptions' => [
+                        'autoclose' => true,
+                        'format' => 'yyyy-mm-dd'
+                    ]
+                ]),
+				],
      
 
            // ['class' => 'yii\grid\ActionColumn'],
