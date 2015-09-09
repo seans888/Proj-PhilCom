@@ -13,6 +13,7 @@ use frontend\models\Logs;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\filters\AccessControl;
 //use yii\web\JsonParser;
 
 /**
@@ -20,9 +21,20 @@ use yii\widgets\ActiveForm;
  */
 class ProjectController extends Controller
 {
-    public function behaviors()
+     public function behaviors()
     {
         return [
+			'access'=>[
+				'class'=>AccessControl::classname(),
+				'only'=>['create','update','index'],
+				'rules'=>[
+					[
+						'allow'=>true,
+						'roles'=>['@']
+					],
+				]
+			],
+		
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -41,8 +53,6 @@ class ProjectController extends Controller
         $searchModel = new ProjectSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-		
-		
 		 // validate if there is a editable input saved via AJAX
     if (Yii::$app->request->post('hasEditable')) {
         // instantiate your book model for saving
@@ -52,27 +62,14 @@ class ProjectController extends Controller
         // store a default json response as desired by editable
         //$out = Json::encode(['output'=>'', 'message'=>'']);
 	
-		$username = Yii::$app->user->identity->username;
+		$firstname = Yii::$app->user->identity->firstname;
+		$lastname = Yii::$app->user->identity->lastname;
 		$status = $model->projectname;
 		
-		
-				
-				
-		
-        // fetch the first entry in posted data (there should 
-        // only be one entry anyway in this array for an 
-        // editable submission)
-        // - $posted is the posted data for Book without any indexes
-        // - $post is the converted array for single model validation
         $post = [];
         $posted = current($_POST['Project']);
         $post['Project'] = $posted;
 		$a = $posted;
-		
-			   
-				
-	
-		
 		
         // load model like any single model validation
         if ($model->load($post) ) {
@@ -87,8 +84,9 @@ class ProjectController extends Controller
 
 			
 			$logC = new Logs;
-				$logC->logs_employee_name = $username;
-				$logC->milestone_date = date('Y-m-d');
+				$logC->logs_employee_name = $firstname." ".$lastname;
+				date_default_timezone_set('Asia/Manila');
+				$logC->milestone_date = date('Y-m-d'). " ".date("h:i:sa");
 				$logC->project_id = $projectId;
 			
 			
@@ -101,6 +99,94 @@ class ProjectController extends Controller
 						
 				}
 				//echo $value;
+			//------------------------------------- For Status----------------------------------------
+			
+			if($key == "percentage_of_completion"){
+			
+			
+				
+				if($model->percentage_of_completion == 90 ){
+					$model->status = "PHYSICALLY COMPLETED";				
+				}else if($model->percentage_of_completion == 91){
+					$model->status = "PHYSICALLY COMPLETED";
+				}else if($model->percentage_of_completion == 92){
+					$model->status = "PHYSICALLY COMPLETED";
+				}else if($model->percentage_of_completion == 93){
+					$model->status = "PHYSICALLY COMPLETED";
+				}else if($model->percentage_of_completion == 94){
+					$model->status = "PHYSICALLY COMPLETED";
+				}else if($model->percentage_of_completion == 95){
+					$model->status = "PHYSICALLY COMPLETED";
+				}else if($model->percentage_of_completion == 96){
+					$model->status = "PHYSICALLY COMPLETED";
+				}else if($model->percentage_of_completion == 97){
+					$model->status = "PHYSICALLY COMPLETED";
+				}else if($model->percentage_of_completion == 98){
+					$model->status = "PHYSICALLY COMPLETED";
+				}else if($model->percentage_of_completion == 99){
+					$model->status = "PHYSICALLY COMPLETED";
+				}	
+			
+					
+				if($model->percentage_of_completion == 100  ){
+					$model->status = "ACCEPTED";				
+				}
+			}
+			
+				
+				
+
+			//----------------------------------------------------------------------------------------	
+			
+			
+			if($key == "status"){			
+			
+				if($model->status == "CANCELED"){
+				$model->percentage_of_completion = 0;
+				} 
+				if ($model->status == "PHYSICALLY COMPLETED"){
+					$model->percentage_of_completion = 90;
+				}
+				if ($model->status == "ACCEPTED"){
+					$model->percentage_of_completion = 100;
+				}
+			}
+			
+			
+			//-------------------------------------For Site Code --------------------------------------
+			
+			
+			if($key == "sitename_id"){
+			
+			$sitecode = $model->sitename_id;
+			$projectCode = $model->projectcode;
+			
+			$connection = \Yii::$app->db;
+				$sql5 = $connection->createCommand('SELECT  sitecode  FROM sitename WHERE id ='.$value)->queryAll();
+				 $encode5 = json_encode($sql5);
+				 $decode5 = json_decode($encode5);
+				 
+					foreach($decode5 as $key5 => $value5){
+						$sitecode = $decode5[$key5]->sitecode;
+					}
+					//echo $sitecode;
+					$projectExplode = explode("-",$projectCode);
+					
+					
+					foreach ($projectExplode as $key6 => $value6){
+						$date = $projectExplode[1];
+						$idCode = $projectExplode[2];
+					}
+					$mergeProjectCode =   $sitecode."-".$date."-".$idCode;
+					 
+					 
+					 $model->projectcode = $mergeProjectCode;
+			
+			}
+			
+			
+			//----------------------------------------------------------------------------------------
+				
 			if ($key == "pic_id"){
 				$connection = \Yii::$app->db;
 				$sql = $connection->createCommand('SELECT  pic_fullName  FROM pic WHERE id ='.$value)->queryAll();
@@ -111,7 +197,7 @@ class ProjectController extends Controller
 						$picName = $decode[$key2]->pic_fullName;
 					} 
 					
-					$logC->milestone=  $key . ' | ' .$picName . ' UPDATED';
+					$logC->milestone=  "Person in charge " . ' | ' .$picName . ' UPDATED';
 					
 					
 			}else if($key == "sitename_id"){
@@ -124,7 +210,7 @@ class ProjectController extends Controller
 						$sitename = $decode3[$key3]->sitename;
 					} 
 					
-					$logC->milestone=  $key . ' | ' .$sitename . ' UPDATED';
+					$logC->milestone=  "Sitename" . ' | ' .$sitename . ' UPDATED';
 				
 			}else if($key == "account_id"){
 				$connection = \Yii::$app->db;
@@ -136,17 +222,29 @@ class ProjectController extends Controller
 						$acctName = $decode4[$key4]->acct_name;
 					} 
 					
-					$logC->milestone=  $key . ' | ' .$acctName . ' UPDATED';
-			} else{
+					$logC->milestone=  "Account" . ' | ' .$acctName . ' UPDATED'; 
+			} else if($key == "contractor"){
+				$logC->milestone=  "Contractor" . ' | ' .$value . ' UPDATED';
+			}else if($key == "date_of_flob"){
+				$logC->milestone=  "Date of Mobilization" . ' | ' .$value . ' UPDATED';
+			}else if($key == "date_of_completion"){
+				$logC->milestone=  "Date of Completion" . ' | ' .$value . ' UPDATED';
+			}else if($key == "percentage_of_completion"){
+				$logC->milestone=  "% of Completion" . ' | ' .$value . ' UPDATED';
+			}else if($key == "remarks"){
+				$logC->milestone=  "Remarks" . ' | ' .$value . ' UPDATED';
+			}else{
 				$logC->milestone=  $key . ' | ' .$value . ' UPDATED';
 			}
 			
-		$logC->save();
+			$logC->save();
 			$model->save();
+			//return $this->redirect(['project/index']);
+			return $this->refresh();
           //  $out = Json::encode(['output'=>$output, 'message'=>'']);
         } 
 		
-        return;
+        
     }
 		
         return $this->render('index', [
