@@ -5,6 +5,8 @@ use kartik\grid\GridView;
 use yii\widgets\Pjax;
 use yii\helpers\Url;
 use frontend\models\Project;
+use dosamigos\datepicker\DatePicker;
+use kartik\export\ExportMenu;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\LogsSearch */
@@ -26,7 +28,20 @@ use frontend\models\Project;
        // ],	
             'logs_employee_name',
             'milestone',
-            'milestone_date',
+			
+			[
+                
+                'attribute' => 'milestone_date',
+				'filter' => DatePicker::widget([
+                    'model' => $searchModel,
+                    'attribute' => 'milestone_date', 
+                    'clientOptions' => [
+                        'autoclose' => true,
+                        'format' => 'yyyy-mm-dd'
+                    ]
+                ]),
+           ],
+          //  'milestone_date',
      
 
            // ['class' => 'yii\grid\ActionColumn'],
@@ -34,7 +49,14 @@ use frontend\models\Project;
 	 
 	 ];
 	?>
-	
+	<div class="export-menu">
+    <?php
+    echo ExportMenu::widget([
+        'dataProvider' => $dataProvider,
+        'columns' => $gridColumns
+    ]);
+    ?>
+    </div>
 	
 	 <?php
     echo GridView::widget([
