@@ -1,7 +1,11 @@
 <?php
 
 use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 use kartik\grid\GridView;
+use yii\widgets\Pjax;
+use yii\helpers\Url;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\PicSearch */
@@ -18,8 +22,47 @@ $this->params['breadcrumbs'][] = $this->title;
   <!--  <p>
         <?= Html::a('Add', ['create'], ['class' => 'btn btn-success']) ?>
     </p> -->
+	
+	
+	<?php 
+	$gridColumn = [
+	
+			['class' => 'kartik\grid\SerialColumn'],
+			[
+				'class' => 'kartik\grid\EditableColumn',
+                'attribute' => 'pic_fullName',
+                'value' => 'pic_fullName',
+            ],	
+			[
+				'class' => 'kartik\grid\EditableColumn',
+                'attribute' => 'pic_email',
+                'value' => 'pic_email',
+            ],	
+			[
+				'class' => 'kartik\grid\EditableColumn',
+                'attribute' => 'pic_contact',
+                'value' => 'pic_contact',
+            ],	
+			 ['class' => 'yii\grid\ActionColumn','template'=>'{delete}'],
+			
+			];
+	
+	?>
 
-    <?= GridView::widget([
+	 <?php echo  GridView::widget([
+        'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
+		'columns' => $gridColumn,
+		'responsive'=>true,
+        'hover'=>true,
+		'pjax' => true,
+		
+		  ]);
+        ?> 
+	
+	
+	
+   <!-- <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
@@ -30,8 +73,8 @@ $this->params['breadcrumbs'][] = $this->title;
 			'pic_email:email', 
 			'pic_contact', 
 
-           ['class' => 'yii\grid\ActionColumn','template'=>'{delete}'],
+          
         ],
-    ]); ?>
+    ]); ?> -->
 
 </div>
